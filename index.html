@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050b16">
+<title>J.A.R.V.I.S. Assistant</title>
+<style>
+:root{--cyan:#37e6ff;--blue:#168cff;--bg:#050b16;--panel:#0b1728;--muted:#8da9c2}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 15%,#102a48 0,#050b16 55%);color:#eaf8ff;font-family:Arial,sans-serif;min-height:100vh}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 5%;border-bottom:1px solid #1c4764}
+.brand{letter-spacing:4px;color:var(--cyan);font-weight:bold}.status{font-size:12px;color:#7fffc2}
+main{max-width:950px;margin:auto;padding:28px 18px}.hero{text-align:center;padding:15px 0 25px}
+.core{width:170px;height:170px;border-radius:50%;margin:12px auto 22px;border:2px solid var(--cyan);box-shadow:0 0 20px #168cff, inset 0 0 25px #168cff55;display:grid;place-items:center;position:relative}
+.core:before,.core:after{content:"";position:absolute;border:1px solid #37e6ff88;border-radius:50%;inset:12px;animation:pulse 3s infinite}.core:after{inset:-9px;animation-delay:1.5s}
+.core span{font-size:27px;letter-spacing:3px;color:var(--cyan);text-shadow:0 0 15px var(--cyan)}
+@keyframes pulse{50%{transform:scale(1.08);opacity:.35}}
+h1{font-size:clamp(22px,5vw,34px);letter-spacing:3px;margin:8px 0}.sub{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.tile,.chatbox{background:linear-gradient(145deg,#0d2035,#091321);border:1px solid #1c4764;border-radius:14px;padding:16px}.tile small{color:var(--muted)}.tile strong{display:block;color:var(--cyan);font-size:20px;margin-top:8px}
+.chatbox h2{font-size:15px;letter-spacing:2px;color:var(--cyan);margin:0 0 12px}.messages{height:210px;overflow:auto;padding:10px;background:#050d18;border-radius:10px;font-size:14px;line-height:1.5}.msg{margin:0 0 12px}.msg b{color:var(--cyan)}
+.controls{display:flex;gap:8px;margin-top:10px}.controls input{min-width:0;flex:1;background:#071321;border:1px solid #28516b;color:white;border-radius:9px;padding:13px}.btn{background:#0b82b8;color:white;border:1px solid var(--cyan);border-radius:9px;padding:12px 15px;font-weight:bold}.btn:active{transform:scale(.97)}
+footer{text-align:center;color:#66839d;font-size:11px;padding:25px}
+@media(max-width:600px){.grid{grid-template-columns:1fr 1fr}.core{width:145px;height:145px}.controls{flex-wrap:wrap}.controls input{flex-basis:100%}}
+</style>
+</head>
+<body>
+<header><div class="brand">J.A.R.V.I.S.</div><div class="status">● SYSTEM ONLINE</div></header>
+<main>
+<section class="hero"><div class="core"><span>J.A.R.V.I.S.</span></div><h1>GOOD EVENING</h1><div class="sub">JUST A RATHER VERY INTELLIGENT SYSTEM</div></section>
+<section class="grid">
+<div class="tile"><small>LOCAL TIME</small><strong id="clock">--:--</strong></div>
+<div class="tile"><small>ASSISTANT STATUS</small><strong>READY</strong></div>
+<div class="tile"><small>MODE</small><strong>PERSONAL</strong></div>
+</section>
+<section class="chatbox">
+<h2>ASSISTANT CONSOLE</h2>
+<div class="messages" id="messages"><p class="msg"><b>JARVIS:</b> Hello. I am online. Type a message to interact with this demo interface.</p></div>
+<div class="controls"><input id="prompt" placeholder="Ask JARVIS something..." autocomplete="off"><button class="btn" id="send">SEND</button><button class="btn" id="voice">🎙</button></div>
+</section>
+</main>
+<footer>JARVIS PERSONAL INTERFACE · DEMO BUILD · AI API CONNECTION NOT CONFIGURED</footer>
+<script>
+const clock=document.getElementById('clock');function tick(){clock.textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});}tick();setInterval(tick,1000);
+const messages=document.getElementById('messages'), input=document.getElementById('prompt');
+function add(who,text){const p=document.createElement('p');p.className='msg';const b=document.createElement('b');b.textContent=who+': ';p.append(b,document.createTextNode(text));messages.appendChild(p);messages.scrollTop=messages.scrollHeight;}
+function send(){const v=input.value.trim();if(!v)return;add('YOU',v);input.value='';add('JARVIS','I received your message. This is the starter interface; connect an AI service to enable intelligent answers.');}
+document.getElementById('send').onclick=send;input.addEventListener('keydown',e=>{if(e.key==='Enter')send();});
+document.getElementById('voice').onclick=()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){add('JARVIS','Voice recognition is not supported in this browser. Try Chrome.');return;}const r=new SR();r.lang='en-US';r.onresult=e=>{input.value=e.results[0][0].transcript;send();};r.onerror=()=>add('JARVIS','I could not hear that. Please try again.');r.start();};
+</script>
+</body></html>
